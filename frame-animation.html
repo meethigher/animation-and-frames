@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frame Animation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+        }
+
+        #particles-js canvas {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="particles-js"></div>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+    let lastTime = performance.now();
+    particlesJS("particles-js", {
+        "particles": {
+            "number": {
+                "value": 180,
+                "density": {
+                    "enable": true,
+                    "value_area": 800
+                }
+            },
+            "color": {
+                "value": "#ffffff"
+            },
+            "shape": {
+                "type": "circle",
+                "stroke": {
+                    "width": 0,
+                    "color": "#000000"
+                },
+                "polygon": {
+                    "nb_sides": 5
+                },
+                "image": {
+                    "src": "img/github.svg",
+                    "width": 100,
+                    "height": 100
+                }
+            },
+            "opacity": {
+                "value": 0.5,
+                "random": false,
+                "anim": {
+                    "enable": false,
+                    "speed": 1,
+                    "opacity_min": 0.1,
+                    "sync": false
+                }
+            },
+            "size": {
+                "value": 2,
+                "random": true,
+                "anim": {
+                    "enable": false,
+                    "speed": 40,
+                    "size_min": 0.1,
+                    "sync": false
+                }
+            },
+            "line_linked": {
+                "enable": false,
+                "distance": 150,
+                "color": "#ffffff",
+                "opacity": 0.4,
+                "width": 1
+            },
+            "move": {
+                "enable": true,
+                "speed": 2,
+                "direction": "bottom-right",
+                "random": false,
+                "straight": false,
+                "out_mode": "out",
+                "attract": {
+                    "enable": false,
+                    "rotateX": 600,
+                    "rotateY": 1200
+                }
+            }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+                "onhover": {
+                    "enable": false,
+                    "mode": "repulse"
+                },
+                "onclick": {
+                    "enable": true,
+                    "mode": "push"
+                },
+                "resize": true
+            },
+            "modes": {
+                "grab": {
+                    "distance": 400,
+                    "line_linked": {
+                        "opacity": 1
+                    }
+                },
+                "bubble": {
+                    "distance": 400,
+                    "size": 40,
+                    "duration": 2,
+                    "opacity": 8,
+                    "speed": 3
+                },
+                "repulse": {
+                    "distance": 200
+                },
+                "push": {
+                    "particles_nb": 4
+                },
+                "remove": {
+                    "particles_nb": 2
+                }
+            }
+        },
+        "retina_detect": true,
+        "config_demo": {
+            "hide_card": false,
+            "background_color": "#b61924",
+            "background_image": "",
+            "background_position": "50% 50%",
+            "background_repeat": "no-repeat",
+            "background_size": "cover"
+        },
+        // 强制将基于帧的动画改成基于时间的动画，但是经过测试发现耗费资源过大，导致运行一会会将电脑卡死。改方案不妥。
+        // "callback": {
+        //     onParticlesUpdate: function () {
+        //         const currentTime = performance.now();
+        //         const deltaTime = (currentTime - lastTime) / 1000; // Time in seconds
+        //         lastTime = currentTime;
+        //
+        //         const speedFactor = deltaTime * 60; // Normalize to 60 FPS
+        //         pJSDom[0].pJS.particles.move.speed = 6 * speedFactor;
+        //     }
+        // }
+    });
+
+    // 重写绘图函数以包含自定义更新逻
+    const originalDraw = pJSDom[0].pJS.fn.particlesDraw;
+    pJSDom[0].pJS.fn.particlesDraw = function () {
+        if (pJSDom[0].pJS.callback && pJSDom[0].pJS.callback.onParticlesUpdate) {
+            pJSDom[0].pJS.callback.onParticlesUpdate();
+        }
+        originalDraw.call(pJSDom[0].pJS);
+    };
+</script>
+</body>
+</html>
